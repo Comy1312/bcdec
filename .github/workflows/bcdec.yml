@@ -1,0 +1,22 @@
+name: Build bcdec
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: sudo apt-get update && sudo apt-get install -y cmake g++
+
+    - name: Configure
+      run: cmake -B build
+
+    - name: Build
+      run: cmake --build build
