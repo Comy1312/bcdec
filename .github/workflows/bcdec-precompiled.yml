@@ -1,0 +1,34 @@
+name: Nightly
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: sudo apt-get update && sudo apt-get install -y cmake g++
+
+    - name: Configure
+      run: cmake -B build
+
+    - name: Build
+      run: cmake --build build
+
+    - name: Install to package dir
+      run: |
+        cmake --install build --prefix package
+        ls -R package  # for debugging/logging
+
+    - name: Zip headers
+      run: |
+        cd package
+        zip -r ../bcdec-nightly.zip .
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: bcdec-nightly
+        path: bcdec-nightly.zip
